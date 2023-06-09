@@ -1,4 +1,4 @@
-package com.authentication.icodemobile;
+package com.auth.icodemobile;
 
 import android.os.Build;
 import android.os.Bundle;

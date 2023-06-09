@@ -8,6 +8,10 @@ import {
   ToastAndroid,
   Image,
 } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
   const [user, setUser] = useState<{
@@ -15,6 +19,49 @@ export default function App() {
     name: string;
     picture: string;
   } | null>(null);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId:
+      '103238814201-8cggc8v1580lcd6tl30gerki0mgmebqd.apps.googleusercontent.com',
+  });
+
+  const callAuthGoogle = () => {
+    promptAsync();
+  };
+
+  const getUserInfo = async () => {
+    if (response) {
+      switch (response.type) {
+        case 'error':
+          ToastAndroid.show('Houve um erro', ToastAndroid.SHORT);
+          break;
+        case 'cancel':
+          ToastAndroid.show('Login cancelado', ToastAndroid.SHORT);
+          break;
+        case 'success':
+          try {
+            const res = await fetch(
+              'https://www.googleapis.com/userinfo/v2/me',
+              {
+                headers: {
+                  Authorization: `Bearer ${response.authentication?.accessToken}`,
+                },
+              }
+            );
+            const userLogin = await res.json();
+            setUser(userLogin);
+          } catch (e) {
+            console.warn('ERROR');
+          }
+          break;
+        default:
+          () => {};
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, [response]);
 
   if (user) {
     return (
@@ -59,7 +106,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login com Google</Text>
-      <Button title='Entrar' disabled={false} onPress={() => {}} />
+      <Button title='Entrar' disabled={!request} onPress={callAuthGoogle} />
       <StatusBar style='auto' />
     </View>
   );

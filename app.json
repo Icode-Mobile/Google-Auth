@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Google Auth",
-    "scheme": "googleauth",
-    "slug": "googleauth",
+    "scheme": "auth",
+    "slug": "auth",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.authentication.icodemobile"
+      "package": "com.auth.icodemobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -113,9 +113,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.authentication.icodemobile'
+    namespace 'com.auth.icodemobile'
     defaultConfig {
-        applicationId 'com.authentication.icodemobile'
+        applicationId 'com.auth.icodemobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
