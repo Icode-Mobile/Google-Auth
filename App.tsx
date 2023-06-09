@@ -1,57 +1,65 @@
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, ToastAndroid } from 'react-native';
-import * as Google from 'expo-auth-session/providers/google';
-import * as Facebook from 'expo-auth-session/providers/facebook';
-import * as WebBrowser from 'expo-web-browser';
-
-WebBrowser.maybeCompleteAuthSession();
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  ToastAndroid,
+  Image,
+} from 'react-native';
 
 export default function App() {
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId:
-      '326223468541-u4raabjnaa4s7ugtqm0odakpbofotn70.apps.googleusercontent.com',
-  });
+  const [user, setUser] = useState<{
+    email: string;
+    name: string;
+    picture: string;
+  } | null>(null);
 
-  const handleSignInWithGoogle = async () => {
-    promptAsync();
-  };
-
-  const getUserInfo = async () => {
-    if (response) {
-      if (response.type === 'error') {
-        ToastAndroid.show('Houve algum erro', ToastAndroid.SHORT);
-      } else if (response.type === 'cancel') {
-        ToastAndroid.show('Operação com login cancelada', ToastAndroid.SHORT);
-      } else if (response.type === 'success') {
-        try {
-          const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-            headers: {
-              Authorization: `Bearer ${response.authentication?.accessToken}`,
-            },
-          });
-
-          const user = await res.json();
-          console.log(user);
-        } catch (error) {
-          console.log('ERROR');
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, [response]);
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <Text
+          style={{
+            fontSize: 20,
+            marginBottom: 10,
+          }}
+        >
+          Seja Bem Vindo ✌
+        </Text>
+        <Image
+          source={{
+            uri: user.picture,
+            width: 70,
+            height: 70,
+          }}
+          borderRadius={40}
+        />
+        <Text
+          style={{
+            marginTop: 10,
+            fontSize: 17,
+          }}
+        >
+          {user.name}
+        </Text>
+        <Text
+          style={{
+            marginBottom: 20,
+          }}
+        >
+          {user.email}
+        </Text>
+        <Button title='Sair' onPress={() => setUser(null)} />
+        <StatusBar style='auto' />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login com Google</Text>
-      <Button
-        title='Entrar'
-        disabled={!request}
-        onPress={handleSignInWithGoogle}
-      />
+      <Button title='Entrar' disabled={false} onPress={() => {}} />
       <StatusBar style='auto' />
     </View>
   );
